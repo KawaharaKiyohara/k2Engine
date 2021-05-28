@@ -147,6 +147,13 @@
 			psoDesc.BlendState.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
 			psoDesc.BlendState.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
 		}
+		else if (initData.m_alphaBlendMode == AlphaBlendMode_Multiply) {
+			//乗算合成。
+			psoDesc.BlendState.RenderTarget[0].BlendEnable = true;
+			psoDesc.BlendState.RenderTarget[0].SrcBlend = D3D12_BLEND_ZERO;
+			psoDesc.BlendState.RenderTarget[0].DestBlend = D3D12_BLEND_SRC_COLOR;
+			psoDesc.BlendState.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+		}
 
 		psoDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
 		psoDesc.DepthStencilState.DepthEnable = FALSE;
@@ -161,9 +168,10 @@
 			psoDesc.RTVFormats[psoDesc.NumRenderTargets] = format;
 			psoDesc.NumRenderTargets++;
 		}
+
 		psoDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 		psoDesc.SampleDesc.Count = 1;
-		psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+
 		m_pipelineState.Init(psoDesc);
 	}
 	void Sprite::InitConstantBuffer(const SpriteInitData& initData)
@@ -243,8 +251,11 @@
 			//未初期化。
 			return;
 		}
+		//現在のビューポートから平行投影行列を計算する。
+		D3D12_VIEWPORT viewport = renderContext.GetViewport();
 		Matrix viewMatrix = g_camera2D->GetViewMatrix();
-		Matrix projMatrix = g_camera2D->GetProjectionMatrix();
+		Matrix projMatrix;
+		projMatrix.MakeOrthoProjectionMatrix(viewport.Width, viewport.Height, 0.1f, 5.0f);
 
 		m_constantBufferCPU.mvp = m_world * viewMatrix * projMatrix;
 		m_constantBufferCPU.mulColor.x = 1.0f;

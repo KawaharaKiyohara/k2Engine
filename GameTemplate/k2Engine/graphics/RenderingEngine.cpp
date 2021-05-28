@@ -239,6 +239,7 @@ void RenderingEngine::Execute(RenderContext& rc)
     m_renderToGBufferModels.clear();
     m_forwardRenderModels.clear();
     m_zprepassModels.clear();
+    m_sprites.clear();
 }
 
 void RenderingEngine::RenderToShadowMap(RenderContext& rc)
@@ -372,10 +373,13 @@ void RenderingEngine::CopyMainRenderTargetToFrameBuffer(RenderContext& rc)
 
 void RenderingEngine::RenderToSprite(RenderContext& rc)
 {
+    // レンダリングターゲットとして利用できるまで待つ。
+    rc.WaitUntilToPossibleSetRenderTarget(m_mainRenderTarget);
     for (auto sprite : m_sprites)
     {
         sprite->Draw(rc);
     }
 
-    m_sprites.clear();
+    
+    rc.WaitUntilFinishDrawingToRenderTarget(m_mainRenderTarget);
 }
