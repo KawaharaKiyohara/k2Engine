@@ -26,18 +26,18 @@ enum AlphaBlendMode {
 /// スプライトの初期化データ。
 /// </summary>
 struct SpriteInitData {
-	std::array<const char*, MAX_TEXTURE> m_ddsFilePath= {nullptr};	//DDSファイルのファイルパス。
-	std::array<Texture*, MAX_TEXTURE> m_textures = { nullptr };		//使用するテクスチャ。DDSファイルのパスが指定されている場合は、このパラメータは無視されます。
-	const char* m_vsEntryPointFunc = "VSMain";						//頂点シェーダーのエントリーポイント。
-	const char* m_psEntryPoinFunc = "PSMain";						//ピクセルシェーダーのエントリーポイント。
-	const char* m_fxFilePath = nullptr;								//.fxファイルのファイルパス。
-	UINT m_width = 0;												//スプライトの幅。
-	UINT m_height = 0;												//スプライトの高さ。
-	void* m_expandConstantBuffer = nullptr;							//ユーザー拡張の定数バッファ
-	int m_expandConstantBufferSize = 0;								//ユーザー拡張の定数バッファのサイズ。
-	IShaderResource* m_expandShaderResoruceView = nullptr;			//ユーザー拡張のシェーダーリソース。
-	AlphaBlendMode m_alphaBlendMode = AlphaBlendMode_None;			//アルファブレンディングモード。
-	std::array<DXGI_FORMAT, MAX_RENDERING_TARGET> m_colorBufferFormat = { 
+	const char* m_ddsFilePath[MAX_TEXTURE]= {nullptr};		//DDSファイルのファイルパス。
+	Texture* m_textures[MAX_TEXTURE] = { nullptr };			//使用するテクスチャ。DDSファイルのパスが指定されている場合は、このパラメータは無視されます。
+	const char* m_vsEntryPointFunc = "VSMain";				//頂点シェーダーのエントリーポイント。
+	const char* m_psEntryPoinFunc = "PSMain";				//ピクセルシェーダーのエントリーポイント。
+	const char* m_fxFilePath = nullptr;						//.fxファイルのファイルパス。
+	UINT m_width = 0;										//スプライトの幅。
+	UINT m_height = 0;										//スプライトの高さ。
+	void* m_expandConstantBuffer = nullptr;					//ユーザー拡張の定数バッファ
+	int m_expandConstantBufferSize = 0;						//ユーザー拡張の定数バッファのサイズ。
+	IShaderResource* m_expandShaderResoruceView = nullptr;	//ユーザー拡張のシェーダーリソース。
+	AlphaBlendMode m_alphaBlendMode = AlphaBlendMode_None;	//アルファブレンディングモード。
+	std::array<DXGI_FORMAT, MAX_RENDERING_TARGET> m_colorBufferFormat = {
 		DXGI_FORMAT_R8G8B8A8_UNORM,
 		DXGI_FORMAT_UNKNOWN,
 		DXGI_FORMAT_UNKNOWN,
@@ -77,8 +77,16 @@ public:
 	/// <summary>
 	/// 描画。
 	/// </summary>
-	/// <param name="renderContext">レンダリングコンテキスト</param>
+	/// <param name="renderContext">レンダリングコンテキスト/param>
 	void Draw(RenderContext& renderContext);
+	/// <summary>
+	/// 初期化されているか判定。
+	/// </summary>
+	/// <returns></returns>
+	bool IsInited() const
+	{
+		return m_isInited;
+	}
 private:
 	/// <summary>
 	/// テクスチャを初期化。
@@ -134,4 +142,5 @@ private:
 	PipelineState		m_pipelineState;		//パイプラインステート。
 	Shader				m_vs;					//頂点シェーダー。
 	Shader				m_ps;					//ピクセルシェーダー。
+	bool				m_isInited = false;		//初期化済み？
 };

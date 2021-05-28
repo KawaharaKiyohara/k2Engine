@@ -1,4 +1,5 @@
 #pragma once
+#include "graphics/RenderingEngine.h"
 
 /// <summary>
 /// スプライトレンラー。
@@ -95,7 +96,8 @@ public:
 	/// <param name="rc">レンダーコンテキスト。</param>
 	void Draw(RenderContext& rc)
 	{
-		m_sprite.Draw(rc);
+		g_renderingEngine->AddSprite(m_sprite);
+		//m_sprite.Draw(rc);
 	}
 private:
 	Sprite			m_sprite;								//スプライト。

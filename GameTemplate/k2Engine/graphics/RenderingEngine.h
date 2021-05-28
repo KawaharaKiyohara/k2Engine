@@ -97,6 +97,11 @@ public:
         m_forwardRenderModels.push_back(&model);
     }
 
+    void AddSprite(Sprite& sprite)
+    {
+        m_sprites.push_back(&sprite);
+    }
+
     /// <summary>
     /// ZPrepassで作成された深度テクスチャを取得
     /// </summary>
@@ -156,6 +161,7 @@ public:
         rc.SetRenderTarget(m_mainRenderTarget.GetRTVCpuDescriptorHandle(), m_gBuffer[enGBufferAlbedo].GetDSVCpuDescriptorHandle());
     }
 private:
+    void RenderToSprite(RenderContext& rc);
     /// <summary>
     /// G-Bufferを初期化
     /// </summary>
@@ -279,6 +285,8 @@ private:
     std::vector< Model* > m_renderToGBufferModels;      // Gバッファへの描画パスで描画するモデルのリスト
 
     std::vector< Model* > m_forwardRenderModels;        // フォワードレンダリングの描画パスで描画されるモデルのリスト
+
+    std::vector<Sprite*>  m_sprites;
 
 };
 

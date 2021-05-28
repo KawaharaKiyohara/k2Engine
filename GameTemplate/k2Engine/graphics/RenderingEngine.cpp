@@ -230,7 +230,7 @@ void RenderingEngine::Execute(RenderContext& rc)
     // ポストエフェクトを実行
     m_postEffect.Render(rc, m_mainRenderTarget);
 
-
+    RenderToSprite(rc);
 
     // メインレンダリングターゲットの内容をフレームバッファにコピー
     CopyMainRenderTargetToFrameBuffer(rc);
@@ -368,4 +368,14 @@ void RenderingEngine::CopyMainRenderTargetToFrameBuffer(RenderContext& rc)
 
     rc.SetViewportAndScissor(viewport);
     m_copyMainRtToFrameBufferSprite.Draw(rc);
+}
+
+void RenderingEngine::RenderToSprite(RenderContext& rc)
+{
+    for (auto sprite : m_sprites)
+    {
+        sprite->Draw(rc);
+    }
+
+    m_sprites.clear();
 }
